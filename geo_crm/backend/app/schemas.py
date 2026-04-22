@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, Field, HttpUrl
+from geo_stealth_prospector.profession_categories import is_valid_category_id
+
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 
 class LeadOut(BaseModel):
@@ -48,11 +50,30 @@ class LeadUpdate(BaseModel):
     contacted_at: datetime | None = None
 
 
+class MetierCategoryOut(BaseModel):
+    id: str
+    label: str
+
+
 class ZoneJobCreate(BaseModel):
     city: str = Field(..., min_length=1, max_length=200)
     max_total: int = Field(40, ge=1, le=2000)
     max_per_metier: int = Field(8, ge=1, le=30)
+    metier_category: str = Field(
+        "high_ticket",
+        min_length=1,
+        max_length=64,
+        description="Id catégorie (restauration, sante_medical, high_ticket, …).",
+    )
     audit_all: bool = False
+
+    @field_validator("metier_category")
+    @classmethod
+    def _valid_cat(cls, v: str) -> str:
+        s = (v or "").strip() or "high_ticket"
+        if not is_valid_category_id(s):
+            raise ValueError("Catégorie inconnue — utilisez GET /api/jobs/metier-categories")
+        return s
 
 
 class JobActivityLine(BaseModel):
@@ -72,6 +93,7 @@ class SourcingJobOut(BaseModel):
     lead_count: int
     max_total: int
     max_per_metier: int
+    metier_category: str = "high_ticket"
     audit_all: bool = False
     cancel_requested: bool = False
     created_at: datetime

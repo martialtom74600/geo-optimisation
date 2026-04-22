@@ -23,6 +23,8 @@ class SourcingJob(Base):
     lead_count: Mapped[int] = mapped_column(Integer, default=0)
     max_total: Mapped[int] = mapped_column(Integer, default=40)
     max_per_metier: Mapped[int] = mapped_column(Integer, default=8)
+    # Id de catégorie (geo_stealth_prospector.profession_categories), ex. restauration, high_ticket
+    metier_category: Mapped[str] = mapped_column(String(64), default="high_ticket")
     audit_all: Mapped[bool] = mapped_column(Boolean, default=False)
     cancel_requested: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

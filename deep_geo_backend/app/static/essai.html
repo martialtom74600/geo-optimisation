@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deep GEO V2 — essai</title>
+  <style>
+    :root {
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      color: #0f172a;
+      background: #f1f5f9;
+      line-height: 1.5;
+    }
+    body { max-width: 44rem; margin: 0 auto; padding: 1.5rem; }
+    h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; }
+    p.muted { color: #64748b; font-size: 0.9rem; margin: 0 0 1.25rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.25rem; }
+    input, select, button { font: inherit; }
+    .row { margin-bottom: 0.9rem; }
+    input[type="text"], input[type="number"], select {
+      width: 100%; max-width: 22rem; padding: 0.45rem 0.55rem; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff;
+    }
+    .checkbox { display: flex; align-items: center; gap: 0.5rem; }
+    .checkbox input { width: auto; }
+    button {
+      background: #0f766e; color: #fff; border: 0; padding: 0.55rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 500;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-top: 1.25rem; }
+    .card h2 { font-size: 0.95rem; margin: 0 0 0.6rem; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 0.75rem; border-radius: 6px; overflow: auto; font-size: 0.8rem; white-space: pre-wrap; word-break: break-word; }
+    .ok { color: #047857; }
+    .err { color: #b91c1c; }
+    a { color: #0d9488; }
+  </style>
+</head>
+<body>
+  <h1>Deep GEO V2 — essai</h1>
+  <p class="muted">
+    Page intégrée à l’API (port 8010). Remplis le formulaire, lance le job, puis le statut s’affiche ici. Pas besoin d’ouvrir <a href="/docs">/docs</a> pour le quotidien.
+  </p>
+
+  <form id="f">
+    <div class="row">
+      <label for="city">Ville</label>
+      <input id="city" name="city" type="text" value="Lyon" required minlength="1" />
+    </div>
+    <div class="row">
+      <label for="metier">Métier (catégorie)</label>
+      <select id="metier" name="metier" required></select>
+    </div>
+    <div class="row">
+      <label for="max">Nombre max d’établissements</label>
+      <input id="max" name="max" type="number" value="3" min="1" max="2000" required />
+    </div>
+    <div class="row checkbox">
+      <input id="audit" name="audit" type="checkbox" />
+      <label for="audit">Auditer toutes les fiches (plus long, plus d’appels Groq)</label>
+    </div>
+    <button type="submit" id="go">Lancer le job</button>
+  </form>
+
+  <div class="card" id="out" style="display:none">
+    <h2>Dernière réponse</h2>
+    <p id="msg"></p>
+    <pre id="raw"></pre>
+  </div>
+
+  <script>
+    const el = (s) => document.querySelector(s);
+    const show = (msg, data, isErr) => {
+      el("#out").style.display = "block";
+      el("#msg").className = isErr ? "err" : "ok";
+      el("#msg").textContent = msg;
+      el("#raw").textContent = data === undefined ? "" : (typeof data === "string" ? data : JSON.stringify(data, null, 2));
+    };
+
+    (async function loadMetiers() {
+      try {
+        const r = await fetch("/api/v2/jobs/metier-categories");
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const list = await r.json();
+        const sel = el("#metier");
+        sel.innerHTML = "";
+        for (const x of list) {
+          const o = document.createElement("option");
+          o.value = x.id;
+          o.textContent = x.label;
+          if (x.id === "restauration") o.selected = true;
+          sel.appendChild(o);
+        }
+        if (sel.options.length && ![...sel.options].some((o) => o.selected)) sel.options[0].selected = true;
+      } catch (e) {
+        show("Impossible de charger les catégories. L’API tourne-t-elle sur ce port ?", String(e), true);
+        el("#go").disabled = true;
+      }
+    })();
+
+    let pollTimer = null;
+    const stopPoll = () => { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } };
+
+    el("#f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      stopPoll();
+      const city = el("#city").value.trim();
+      const metier_category = el("#metier").value;
+      const max_total = Math.min(2000, Math.max(1, parseInt(el("#max").value, 10) || 3));
+      const audit_all = el("#audit").checked;
+      el("#go").disabled = true;
+      show("Envoi en cours…", null, false);
+      try {
+        const r = await fetch("/api/v2/jobs/zone", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ city, metier_category, max_total, audit_all }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) {
+          show("Erreur " + r.status, j.detail || j, true);
+          el("#go").disabled = false;
+          return;
+        }
+        const id = j.id;
+        show("Job créé n°" + id + " — en attente ou en cours. Mise à jour ci-dessous…", j, false);
+        const tick = async () => {
+          try {
+            const gr = await fetch("/api/v2/jobs/" + id);
+            const g = await gr.json();
+            if (!gr.ok) {
+              show("Erreur lecture job", g, true);
+              stopPoll();
+              el("#go").disabled = false;
+              return;
+            }
+            const done = ["completed", "failed", "cancelled"].includes(g.status);
+            const label = (g.error ? " (voir error)" : "");
+            show(
+              (done ? "Terminé — " : "En cours — ") + "statut : " + g.status + " — " + (g.progress_message || "") + " — leads : " + (g.lead_count || 0) + label,
+              g,
+              !!g.error
+            );
+            if (done) {
+              stopPoll();
+              if (g.status === "completed" && (g.lead_count || 0) > 0) {
+                const lr = await fetch("/api/v2/leads?job_id=" + id + "&limit=50");
+                if (lr.ok) {
+                  const leads = await lr.json();
+                  el("#raw").textContent = JSON.stringify({ job: g, leads }, null, 2);
+                }
+              }
+              el("#go").disabled = false;
+            }
+          } catch (err) {
+            show("Erreur réseau (poll)", String(err), true);
+            stopPoll();
+            el("#go").disabled = false;
+          }
+        };
+        await tick();
+        pollTimer = setInterval(tick, 2000);
+      } catch (err) {
+        show("Erreur", String(err), true);
+        el("#go").disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

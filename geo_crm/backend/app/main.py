@@ -52,6 +52,15 @@ def _ensure_sqlite_schema() -> None:
                     "ADD COLUMN activity_log_json TEXT NOT NULL DEFAULT '[]'"
                 )
             )
+    cols4 = {c["name"] for c in insp.get_columns("sourcing_jobs")}
+    if "metier_category" not in cols4:
+        with engine.begin() as conn:
+            conn.execute(
+                text(
+                    "ALTER TABLE sourcing_jobs "
+                    "ADD COLUMN metier_category VARCHAR(64) NOT NULL DEFAULT 'high_ticket'"
+                )
+            )
 
 
 def _ensure_leads_schema() -> None:
@@ -104,7 +113,12 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_settings.origins_list()
-    or ["http://127.0.0.1:5173", "http://localhost:5173"],
+    or [
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -117,8 +131,11 @@ app.include_router(leads.router)
 def root():
     return {
         "service": "geo-crm-api",
-        "message": "L’API est en ligne. L’interface web (Vite) tourne sur le port 5173.",
-        "ui": "http://127.0.0.1:5173",
+        "message": (
+            "En développement, l’app web est sur http://127.0.0.1:8000 (un seul onglet). "
+            "Cette instance écoute en 8001 en coulisses."
+        ),
+        "ui": "http://127.0.0.1:8000",
         "docs": "/docs",
         "health": "/api/health",
     }

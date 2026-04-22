@@ -30,7 +30,7 @@ from geo_stealth_prospector.export_leads import export_csv, export_json
 from geo_stealth_prospector.lead_dedupe import dedupe_leads_by_registered_domain
 from geo_stealth_prospector.models import CrawlResult, LeadRecord
 from geo_stealth_prospector.naming import derive_company_name
-from geo_stealth_prospector.professions import HIGH_TICKET_PROFESSIONS
+from geo_stealth_prospector.profession_categories import resolve_zone_metiers
 from geo_stealth_prospector.zone_sourcing import zone_sourcing_multimetier
 
 app = typer.Typer(
@@ -144,7 +144,13 @@ def run_cmd(
         None,
         "--zone",
         "-z",
-        help="Mode aspirateur : la ville cible ; sans MÉTIER, utilise la liste high-ticket interne.",
+        help="Mode aspirateur : la ville cible ; sans MÉTIER, utilise --categorie ou la liste high-ticket.",
+    ),
+    categorie: Optional[str] = typer.Option(
+        None,
+        "--categorie",
+        "--cat",
+        help="Mode --zone sans métier explicite : id de catégorie (ex. restauration, sante_medical, high_ticket).",
     ),
     max_results: int = typer.Option(
         12,
@@ -198,9 +204,15 @@ def run_cmd(
     if zone_s:
         city = zone_s
         if metier_s:
-            metiers: list[str] = [metier_s]
+            metiers = [metier_s]
         else:
-            metiers = list(HIGH_TICKET_PROFESSIONS)
+            key = (categorie or "").strip() or "high_ticket"
+            try:
+                _lbl, mlist = resolve_zone_metiers(key)
+            except ValueError as e:
+                console.print(f"[red]{e}[/]")
+                raise typer.Exit(1) from e
+            metiers = mlist
         zone_mode = True
         if ville_s and ville_s != city:
             console.print(

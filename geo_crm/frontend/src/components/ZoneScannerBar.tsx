@@ -1,8 +1,12 @@
-import { Activity, ChevronDown, MapPin, Radar, Sparkles } from "lucide-react";
+import { Activity, ChevronDown, MapPin, Radar, Sparkles, Tags } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import type { MetierCategory } from "../types";
 
 type Props = {
+  metierCategories: MetierCategory[];
+  formMetierCategory: string;
+  onFormMetierCategoryChange: (id: string) => void;
   formCity: string;
   onFormCityChange: (v: string) => void;
   formMaxTotal: number;
@@ -16,6 +20,9 @@ type Props = {
 };
 
 export function ZoneScannerBar({
+  metierCategories,
+  formMetierCategory,
+  onFormMetierCategoryChange,
   formCity,
   onFormCityChange,
   formMaxTotal,
@@ -54,12 +61,43 @@ export function ZoneScannerBar({
             Aspirateur de territoire
           </h2>
           <p className="text-sm text-zinc-500 max-w-lg">
-            Choisissez une ville : nous trouvons les professionnels, analysons leurs pages et
-            classifions l’opportunité pour votre équipe commerciale.
+            Catégorie d’activité + ville : le moteur enchaîne plusieurs intitulés (ex. « Restaurant »,
+            « Traiteur ») pour couvrir toute la zone, puis filtre par domaine et analyse.
           </p>
         </div>
 
         <div className="mx-auto max-w-3xl">
+          <div className="mb-3">
+            <label className="sr-only" htmlFor="metier-cat">
+              Secteur d’activité
+            </label>
+            <div className="relative">
+              <Tags
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
+                aria-hidden
+              />
+              <select
+                id="metier-cat"
+                className="w-full appearance-none rounded-xl border border-zinc-700/80 bg-zinc-950/90 pl-11 pr-10 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/50"
+                value={formMetierCategory}
+                onChange={(e) => onFormMetierCategoryChange(e.target.value)}
+                disabled={submitting || !metierCategories.length}
+              >
+                {(metierCategories.length ? metierCategories : [{ id: "high_ticket", label: "—" }]).map(
+                  (c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  )
+                )}
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+            </div>
+            <p className="text-[11px] text-zinc-600 mt-1.5 pl-0.5">
+              Chaque option lance une série de requêtes ciblées (restaurants, bars, etc. pour
+              &quot;Restauration&quot;).
+            </p>
+          </div>
           <div className="flex flex-col sm:flex-row gap-3 sm:items-stretch sm:gap-0">
             <div className="relative flex-1 min-w-0">
               <MapPin

@@ -28,13 +28,21 @@ import {
   cancelJob,
   deleteLead,
   fetchLeads,
+  fetchMetierCategories,
   fetchStats,
   getJob,
   listJobs,
   startZoneJob,
   updateLeadCrm,
 } from "./api";
-import type { CrmStatus, JobActivityLine, Lead, SourcingJob, Stats } from "./types";
+import type {
+  CrmStatus,
+  JobActivityLine,
+  Lead,
+  MetierCategory,
+  SourcingJob,
+  Stats,
+} from "./types";
 
 const CRM_LABEL: Record<string, string> = {
   new: "Nouveau",
@@ -158,6 +166,8 @@ export default function App() {
   }, [activityLog]);
 
   const [formCity, setFormCity] = useState("Annecy");
+  const [formMetierCategory, setFormMetierCategory] = useState("high_ticket");
+  const [metierCategories, setMetierCategories] = useState<MetierCategory[]>([]);
   const [formMaxTotal, setFormMaxTotal] = useState(40);
   const [formMaxPer, setFormMaxPer] = useState(8);
   const [formAuditAll, setFormAuditAll] = useState(false);
@@ -205,6 +215,18 @@ export default function App() {
   useEffect(() => {
     void loadAll();
   }, [loadAll]);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        setMetierCategories(await fetchMetierCategories());
+      } catch {
+        setMetierCategories([
+          { id: "high_ticket", label: "Artisans & pros high-ticket (défaut)" },
+        ]);
+      }
+    })();
+  }, []);
 
   const refreshOnJobDone = useCallback(() => {
     void loadAll();
@@ -259,6 +281,7 @@ export default function App() {
         city: formCity.trim(),
         max_total: formMaxTotal,
         max_per_metier: formMaxPer,
+        metier_category: formMetierCategory,
         audit_all: formAuditAll,
       });
       failureLoggedRef.current = false;
@@ -276,7 +299,9 @@ export default function App() {
           {
             id: `job-${j.id}-start`,
             t: t0,
-            line: `Lancement — job n°${j.id}, ville « ${j.city} », plafond ${j.max_total} prospect(s) au total, jusqu’à ${j.max_per_metier} site(s) par métier. Le détail de chaque étape arrive ci‑dessous dès que le serveur a démarré.`,
+            line: `Lancement — job n°${j.id}, catégorie « ${j.metier_category ?? "high_ticket"} », ville « ${
+              j.city
+            } », plafond ${j.max_total} prospect(s) au total, jusqu’à ${j.max_per_metier} site(s) par intitulé moteur. Le détail de chaque étape arrive ci‑dessous dès que le serveur a démarré.`,
           },
           ...(j.progress_message
             ? [{ id: `job-${j.id}-0`, t: t0, line: j.progress_message.trim() }]
@@ -588,6 +613,9 @@ export default function App() {
               <HeroKpiCards stats={stats} />
 
               <ZoneScannerBar
+                metierCategories={metierCategories}
+                formMetierCategory={formMetierCategory}
+                onFormMetierCategoryChange={setFormMetierCategory}
                 formCity={formCity}
                 onFormCityChange={setFormCity}
                 formMaxTotal={formMaxTotal}

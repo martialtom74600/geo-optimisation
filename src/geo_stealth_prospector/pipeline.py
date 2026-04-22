@@ -14,7 +14,7 @@ from geo_stealth_prospector.crawl_proof import crawl_leads_concurrent
 from geo_stealth_prospector.exceptions import JobCancelled
 from geo_stealth_prospector.lead_dedupe import dedupe_leads_by_registered_domain
 from geo_stealth_prospector.models import LeadRecord
-from geo_stealth_prospector.professions import HIGH_TICKET_PROFESSIONS
+from geo_stealth_prospector.profession_categories import resolve_zone_metiers
 from geo_stealth_prospector.zone_sourcing import zone_sourcing_multimetier
 
 LOG = logging.getLogger(__name__)
@@ -29,6 +29,10 @@ class ZonePipelineConfig:
     max_per_metier: int
     audit_all: bool = False
     skip_crawl_audit: bool = False  # sourcing + dédup seulement
+    # Id de :mod:`profession_categories` (ex. restauration, high_ticket) ; ignored si ``metiers_override``.
+    metier_category: str = "high_ticket"
+    # Liste explicite (tests / appels spécifiques) — prioritaire sur ``metier_category``.
+    metiers_override: tuple[str, ...] | None = None
 
 
 async def run_zone_pipeline(
@@ -43,7 +47,11 @@ async def run_zone_pipeline(
     ``on_status`` reçoit des messages courts pour UI / logs (thread-safe : appeler depuis la boucle async).
     """
     city = config.city.strip()
-    metiers = list(HIGH_TICKET_PROFESSIONS)
+    if config.metiers_override is not None:
+        cat_label = "sélection personnalisée"
+        metiers = list(config.metiers_override)
+    else:
+        cat_label, metiers = resolve_zone_metiers(config.metier_category)
     if settings.zone_max_metiers > 0:
         metiers = metiers[: settings.zone_max_metiers]
 
@@ -63,7 +71,7 @@ async def run_zone_pipeline(
             on_status(msg)
 
     status(
-        f"Sourcing : {len(metiers)} familles de métiers « high-ticket » pour « {city} » "
+        f"Sourcing : catégorie « {cat_label} » — {len(metiers)} intitulés moteur pour « {city} » "
         f"(plafond final visé : {cap} prospect(s), jusqu’à {max(1, config.max_per_metier)} URL(s) distinctes par famille)."
     )
 

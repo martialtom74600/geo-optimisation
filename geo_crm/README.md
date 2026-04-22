@@ -30,7 +30,7 @@ cd geo_crm/frontend && npm install && cd ../..
 Variables d’environnement (racine `GEO/.env` ou `geo_crm/backend/.env`) :
 
 - `GEO_GROQ_API_KEY` — clé Groq (obligatoire pour les audits IA sur les cibles prioritaires)
-- `GEO_CRM_CORS_ORIGINS` — optionnel, liste séparée par des virgules (défaut : `http://127.0.0.1:5173,http://localhost:5173`)
+- `GEO_CRM_CORS_ORIGINS` — optionnel, liste séparée par des virgules (défaut : `http://127.0.0.1:8000`, etc.)
 
 ## Lancer (recommandé : API + site en **une** commande)
 
@@ -50,8 +50,7 @@ cd ~/Documents/Codage/GEO/geo_crm
 bash dev.sh
 ```
 
-- **UI** : [http://127.0.0.1:5173](http://127.0.0.1:5173)  
-- **API** : [http://127.0.0.1:8000](http://127.0.0.1:8000) (proxy Vite → `/api`)  
+- **App (un seul onglet)** : [http://127.0.0.1:8000](http://127.0.0.1:8000) — l’UI Vite et les requêtes `/api` passent par cette URL (l’API FastAPI tourne en coulisses sur le port **8001**).  
 - **Arrêt** : un seul **Ctrl+C** termine l’API et Vite (grâce à `concurrently -k`).
 
 `run-api.sh` active automatiquement `PYTHONPATH` sur la racine du repo et utilise `.venv/bin/python` s’il existe.
@@ -63,7 +62,7 @@ cd ~/Documents/Codage/GEO
 bash geo_crm/run-api.sh
 ```
 
-Ou manuellement avec le venv activé : `cd geo_crm/backend` puis `PYTHONPATH=$(cd ../.. && pwd) python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000`
+Ou manuellement avec le venv activé : `cd geo_crm/backend` puis `PYTHONPATH=$(cd ../.. && pwd) python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8001` (l’UI reste sur le port 8000 via Vite, pas la peine d’ouvrir le 8001 dans le navigateur)
 
 ## Dépannage
 
@@ -75,7 +74,7 @@ Ou manuellement avec le venv activé : `cd geo_crm/backend` puis `PYTHONPATH=$(c
 
 **Frontend seul** (si l’API tourne déjà ailleurs) : `cd geo_crm/frontend && npm run dev`
 
-- Santé API : `GET http://127.0.0.1:8000/api/health`
+- Santé API (via le proxy, même URL que l’app) : `GET http://127.0.0.1:8000/api/health`
 - Base SQLite par défaut : `geo_crm/backend/data/geo_crm.db`
 
 ## Build production (frontend)

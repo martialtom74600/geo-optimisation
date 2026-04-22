@@ -1,0 +1,32 @@
+# GEO CRM V2 / Deep GEO — services locaux (PostgreSQL + Redis)
+# Usage: docker compose up -d
+# Puis: définir DATABASE_URL et REDIS_URL vers ces services (voir deep_geo_backend/README.md)
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: deepgeo
+      POSTGRES_PASSWORD: deepgeo
+      POSTGRES_DB: deepgeo
+    ports:
+      - "5432:5432"
+    volumes:
+      - deepgeo_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deepgeo -d deepgeo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  deepgeo_pgdata:

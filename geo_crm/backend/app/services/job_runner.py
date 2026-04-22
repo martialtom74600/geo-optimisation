@@ -91,12 +91,14 @@ async def run_zone_sourcing_job(job_id: int) -> None:
             j = db.get(SourcingJob, job_id)
             return bool(j and j.cancel_requested)
 
+        cat = (job.metier_category or "high_ticket").strip() or "high_ticket"
         cfg = ZonePipelineConfig(
             city=job.city,
             max_total=max(1, job.max_total),
             max_per_metier=max(1, job.max_per_metier),
             audit_all=bool(job.audit_all),
             skip_crawl_audit=False,
+            metier_category=cat,
         )
 
         rows = await run_zone_pipeline(

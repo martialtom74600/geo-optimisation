@@ -9,10 +9,16 @@ from sqlalchemy.orm import Session
 from app.activity_log import append_job_activity
 from app.database import get_db
 from app.models import SourcingJob
-from app.schemas import SourcingJobOut, ZoneJobCreate
+from app.schemas import MetierCategoryOut, SourcingJobOut, ZoneJobCreate
 from app.services.job_runner import run_zone_sourcing_job
+from geo_stealth_prospector.profession_categories import list_category_choices
 
 router = APIRouter(prefix="/api/jobs", tags=["jobs"])
+
+
+@router.get("/metier-categories", response_model=list[MetierCategoryOut])
+def list_metier_categories() -> list[MetierCategoryOut]:
+    return [MetierCategoryOut(id=cid, label=label) for cid, label in list_category_choices()]
 
 
 @router.post("/zone", response_model=SourcingJobOut)
@@ -27,6 +33,7 @@ def create_zone_job(
         progress_message="En file d'attente…",
         max_total=body.max_total,
         max_per_metier=body.max_per_metier,
+        metier_category=body.metier_category.strip(),
         audit_all=body.audit_all,
     )
     db.add(job)

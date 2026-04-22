@@ -1,4 +1,4 @@
-import type { Lead, LeadPatch, SourcingJob, Stats } from "./types";
+import type { Lead, LeadPatch, MetierCategory, SourcingJob, Stats } from "./types";
 
 const json = (r: Response) => {
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -45,10 +45,17 @@ export async function updateLeadCrm(
   return patchLead(id, { crm_status });
 }
 
+export async function fetchMetierCategories(): Promise<MetierCategory[]> {
+  return (await json(
+    await fetch("/api/jobs/metier-categories")
+  )) as MetierCategory[];
+}
+
 export async function startZoneJob(body: {
   city: string;
   max_total: number;
   max_per_metier: number;
+  metier_category: string;
   audit_all: boolean;
 }): Promise<SourcingJob> {
   return (await json(

@@ -46,6 +46,7 @@ export interface JobActivityLine {
 export interface SourcingJob {
   id: number;
   city: string;
+  metier_category?: string;
   status: "queued" | "running" | "completed" | "failed" | "cancelled";
   cancel_requested?: boolean;
   progress_message: string;
@@ -58,6 +59,11 @@ export interface SourcingJob {
   audit_all: boolean;
   created_at: string;
   completed_at: string | null;
+}
+
+export interface MetierCategory {
+  id: string;
+  label: string;
 }
 
 export interface Stats {

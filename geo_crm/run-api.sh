@@ -13,4 +13,5 @@ if [[ -z "$PY" ]]; then
   exit 1
 fi
 cd "${REPO_ROOT}/geo_crm/backend"
-exec "$PY" -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+# Port 8001 : l'interface (Vite) occupe 8000 et proxifie /api ici.
+exec "$PY" -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8001
