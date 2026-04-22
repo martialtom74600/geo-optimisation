@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "geo-crm-api"
+version = "0.1.0"
+description = "API GEO-CRM (FastAPI) — requiert le package geo-stealth-prospector (install -e à la racine du repo)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "sqlalchemy>=2.0.0",
+    "pydantic-settings>=2.2.0",
+    "python-dotenv>=1.0.0",
+    "orjson>=3.9.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

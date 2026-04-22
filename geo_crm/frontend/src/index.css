@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  @apply text-zinc-100 bg-surface;
+}
+
+::selection {
+  @apply bg-indigo-500/30 text-white;
+}
+
+/* Scrollbar (WebKit) */
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-zinc-700;
+}
+
+.mono-snippet {
+  @apply font-mono text-xs leading-relaxed text-zinc-300 bg-zinc-950/80 p-3 rounded-lg border border-border-subtle overflow-x-auto;
+}

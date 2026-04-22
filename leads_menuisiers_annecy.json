@@ -1,0 +1,170 @@
+[
+  {
+    "company_name": "Menuisierannecy",
+    "url": "https://menuisierannecy.fr/",
+    "metier": "Menuisier",
+    "city": "Annecy",
+    "title": "Menuisier Annecy : Services de Menuiserie en Haute-Savoie",
+    "crawl": {
+      "page_fetched": true,
+      "final_url": "https://menuisierannecy.fr/",
+      "http_status": 200,
+      "error": null,
+      "title": "Menuisier Annecy : Services de Menuiserie en Haute-Savoie",
+      "h1_texts": [
+        "Menuisier Annecy"
+      ],
+      "has_jsonld_script": true,
+      "jsonld_types_found": [
+        "BreadcrumbList",
+        "ListItem",
+        "Organization",
+        "ImageObject",
+        "WebPage",
+        "WebSite",
+        "FAQPage",
+        "Question",
+        "Answer"
+      ],
+      "has_relevant_business_schema": true
+    },
+    "audit": {
+      "risque_marche": "Le site de Menuisier Annecy est exposé à une concurrence accrue dans les résultats de recherche locaux, notamment avec l'utilisation croissante des assistants vocaux et des recommandations personnalisées. La présence de schémas JSON-LD pertinents peut améliorer la visibilité du site.",
+      "faille_technique": "Bien que le site contienne des balises JSON-LD, il est important de vérifier que les schémas utilisés sont bien ceux attendus par les moteurs de recherche pour améliorer la visibilité du site. Les types détectés incluent Organization, mais il faudrait vérifier si les informations de contact et d'adresse sont bien incluses.",
+      "hook_email": "Améliorez votre visibilité en ligne avec des données structurées pertinentes !",
+      "json_ld_suggestion": "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"LocalBusiness\",\n  \"name\": \"Menuisier Annecy\",\n  \"url\": \"https://menuisierannecy.fr/\",\n  \"description\": \"Services de Menuiserie en Haute-Savoie\",\n  \"telephone\": \"__PLACEHOLDER_TELEPHONE__\",\n  \"address\": {\n    \"@type\": \"PostalAddress\",\n    \"streetAddress\": \"__PLACEHOLDER_ADRESSE__\",\n    \"addressLocality\": \"Annecy\",\n    \"addressRegion\": \"Haute-Savoie\",\n    \"postalCode\": \"__PLACEHOLDER_CODE_POSTAL__\",\n    \"addressCountry\": \"France\"\n  },\n  \"openingHours\": \"__PLACEHOLDER_HEURES_OUVERTURE__\"\n}"
+    },
+    "error": null,
+    "source_rank": 1
+  },
+  {
+    "company_name": "Chauffierconstruction",
+    "url": "https://chauffierconstruction.fr/",
+    "metier": "Menuisier",
+    "city": "Annecy",
+    "title": "Chauffier - Menuisier à Annecy - Agencement Sur Mesure",
+    "crawl": {
+      "page_fetched": true,
+      "final_url": "https://chauffierconstruction.fr/",
+      "http_status": 200,
+      "error": null,
+      "title": "Chauffier Construction | Menuisier à Annecy - Agencement Sur Mesure",
+      "h1_texts": [
+        "Chauffier Construction"
+      ],
+      "has_jsonld_script": true,
+      "jsonld_types_found": [
+        "LocalBusiness",
+        "PostalAddress",
+        "City",
+        "AdministrativeArea",
+        "Person",
+        "AggregateRating",
+        "Review",
+        "Rating",
+        "OfferCatalog",
+        "Offer",
+        "Service",
+        "FAQPage",
+        "Question",
+        "Answer"
+      ],
+      "has_relevant_business_schema": true
+    },
+    "audit": {
+      "risque_marche": "Le risque concret pour Chauffier Construction est de ne pas être visible dans les résultats de recherche locaux, notamment pour les requêtes spécifiques à Annecy et au métier de menuisier. La concurrence dans ce domaine est élevée, et les recommandations personnalisées basées sur les données structurées comme les schémas JSON-LD sont de plus en plus importantes pour les systèmes de recherche.",
+      "faille_technique": "Bien que le site ait des balises JSON-LD, il est important de vérifier que les schémas les plus pertinents pour l'entreprise, tels que LocalBusiness, soient correctement implementés et complets. L'absence ou l'incomplétude de ces données structurées peut limiter la visibilité du site dans les résultats de recherche.",
+      "hook_email": "Améliorez votre visibilité en ligne avec des données structurées de qualité pour votre entreprise de menuiserie à Annecy.",
+      "json_ld_suggestion": "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"LocalBusiness\",\n  \"name\": \"Chauffier Construction\",\n  \"url\": \"https://chauffierconstruction.fr/\",\n  \"description\": \"Menuisier à Annecy - Agencement Sur Mesure\",\n  \"telephone\": \"__PLACEHOLDER_TELEPHONE__\",\n  \"address\": {\n    \"@type\": \"PostalAddress\",\n    \"streetAddress\": \"__PLACEHOLDER_ADRESSE__\",\n    \"addressLocality\": \"Annecy\",\n    \"addressRegion\": \"Auvergne-Rhône-Alpes\",\n    \"postalCode\": \"__PLACEHOLDER_CODE_POSTAL__\",\n    \"addressCountry\": \"France\"\n  },\n  \"openingHours\": \"__PLACEHOLDER_HEURES_D_OUVERTURE__\"\n}"
+    },
+    "error": null,
+    "source_rank": 2
+  },
+  {
+    "company_name": "Menuisier Leberet",
+    "url": "https://menuisier-leberet.fr/",
+    "metier": "Menuisier",
+    "city": "Annecy",
+    "title": "️ Menuisier Annecy | Menuiserie Intérieure et Extérieure",
+    "crawl": {
+      "page_fetched": true,
+      "final_url": "https://menuisier-leberet.fr/",
+      "http_status": 200,
+      "error": null,
+      "title": "🛠️ Menuisier Annecy | Menuiserie Intérieure et Extérieure🌿",
+      "h1_texts": [
+        "Menuisier Annecy : Agencement, Isolation et Rénovation"
+      ],
+      "has_jsonld_script": true,
+      "jsonld_types_found": [
+        "Place",
+        "PostalAddress",
+        "Organization",
+        "ImageObject",
+        "ContactPoint",
+        "WebSite",
+        "SearchAction",
+        "AboutPage"
+      ],
+      "has_relevant_business_schema": true
+    },
+    "audit": null,
+    "error": "Expecting value: line 1 column 1 (char 0)",
+    "source_rank": 3
+  },
+  {
+    "company_name": "Perrissoud Menuiserie",
+    "url": "https://www.perrissoud-menuiserie.fr/",
+    "metier": "Menuisier",
+    "city": "Annecy",
+    "title": "Perrissoud Menuiserie, entreprise de menuiserie à Annecy",
+    "crawl": {
+      "page_fetched": true,
+      "final_url": "https://www.perrissoud-menuiserie.fr/",
+      "http_status": 200,
+      "error": null,
+      "title": "Perrissoud Menuiserie, entreprise de menuiserie à Annecy",
+      "h1_texts": [
+        "Notre entreprise de menuiserie à l'écoute de vos projets à Annecy : Perrissoud Menuiserie"
+      ],
+      "has_jsonld_script": true,
+      "jsonld_types_found": [
+        "WebSite",
+        "LocalBusiness",
+        "PostalAddress",
+        "GeoCoordinates",
+        "OpeningHoursSpecification"
+      ],
+      "has_relevant_business_schema": true
+    },
+    "audit": null,
+    "error": "Expecting value: line 1 column 1 (char 0)",
+    "source_rank": 4
+  },
+  {
+    "company_name": "Menuisier",
+    "url": "https://www.menuisier.info/entreprise_localisation/toutes-les-regions/rhone-alpes/haute-savoie/annecy/",
+    "metier": "Menuisier",
+    "city": "Annecy",
+    "title": "Menuisier Annecy | Top 10 des menuisiers à Annecy",
+    "crawl": {
+      "page_fetched": false,
+      "final_url": "https://www.menuisier.info/entreprise_localisation/toutes-les-regions/rhone-alpes/haute-savoie/annecy/",
+      "http_status": 403,
+      "error": "HTTP 403",
+      "title": "",
+      "h1_texts": [],
+      "has_jsonld_script": false,
+      "jsonld_types_found": [],
+      "has_relevant_business_schema": false
+    },
+    "audit": {
+      "risque_marche": "Le site web de l'entreprise de menuiserie à Annecy est exposé à un risque de visibilité réduit en raison de l'absence de données structurées sur la page, ce qui peut impacter sa positionnement dans les résultats de recherche locaux. La concurrence dans le secteur de la menuiserie à Annecy est élevée, et les entreprises qui optimisent leur présence en ligne ont plus de chances de se démarquer.",
+      "faille_technique": "L'absence de balises JSON-LD et de schéma LocalBusiness sur la page d'accueil du site web constitue une faille technique majeure. Cela signifie que les moteurs de recherche ne peuvent pas extraire facilement les informations de l'entreprise, ce qui peut limiter sa visibilité dans les résultats de recherche. De plus, l'absence de titre et de H1 sur la page renforce cette faille.",
+      "hook_email": "Améliorez votre visibilité en ligne et faites-vous connaître à Annecy avec une optimisation de votre site web pour les moteurs de recherche locaux.",
+      "json_ld_suggestion": "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"LocalBusiness\",\n  \"name\": \"Menuisier Annecy\",\n  \"url\": \"https://www.menuisier.info/entreprise_localisation/toutes-les-regions/rhone-alpes/haute-savoie/annecy/\",\n  \"description\": \"Menuisier à Annecy, spécialisé dans la fabrication et l'installation de meubles et de menuiseries\",\n  \"telephone\": \"__PLACEHOLDER_TELEPHONE__\",\n  \"address\": {\n    \"@type\": \"PostalAddress\",\n    \"streetAddress\": \"__PLACEHOLDER_ADRESSE__\",\n    \"addressLocality\": \"Annecy\",\n    \"addressRegion\": \"Haute-Savoie\",\n    \"postalCode\": \"__PLACEHOLDER_CODE_POSTAL__\",\n    \"addressCountry\": \"France\"\n  },\n  \"openingHours\": \"__PLACEHOLDER_HEURES_D_OUVERTURE__\"\n}"
+    },
+    "error": null,
+    "source_rank": 5
+  }
+]

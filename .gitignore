@@ -1,0 +1,38 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.tldcache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+
+# Environnements & secrets
+.env
+.env.local
+.env.*.local
+
+# Node (npm / Vite)
+node_modules/
+**/node_modules/
+npm-debug.log*
+geo_crm/frontend/dist/
+
+# Bases de données locales
+*.db
+*.sqlite
+*.sqlite3
+
+# OS & IDE
+.DS_Store
+.idea/
+.vscode/
+.cursor/
+
+# Outils
+dist/
+coverage/
+htmlcov/
+*.tsbuildinfo
